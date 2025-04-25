@@ -129,14 +129,22 @@ a_line_DiD_transit <- feols(pct_transit ~ TREATMENT*ACTIVE | GISJOIN + YEAR, dat
 g_line_DiD_transit <- feols(pct_transit ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # mhi DiD
-a_line_DiD$mhi <- as.numeric(a_line_DiD$mhi)
-g_line_DiD$mhi <- as.numeric(g_line_DiD$mhi)
+a_line_DiD <- a_line_DiD %>%
+  mutate = (mhi = as.numeric(mhi)) %>%
+  filter(mhi >= 0)
+g_line_DiD <- g_line_DiD %>%
+  mutate = (mhi = as.numeric(mhi)) %>%
+  filter(mhi >= 0)
 a_line_DiD_mhi <- feols(log(mhi) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
 g_line_DiD_mhi <- feols(log(mhi) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # medvalhu DiD
-a_line_DiD$medvalhu <- as.numeric(a_line_DiD$medvalhu)
-g_line_DiD$medvalhu <- as.numeric(g_line_DiD$medvalhu)
+a_line_DiD <- a_line_DiD %>%
+  mutate = (medvalhu = as.numeric(mhi)) %>%
+  filter(medvalhu >= 0)
+g_line_DiD <- g_line_DiD %>%
+  mutate = (medvalhu = as.numeric(mhi)) %>%
+  filter(medvalhu >= 0)
 a_line_DiD_medvalhu <- feols(log(medvalhu) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
 g_line_DiD_medvalhu <- feols(log(medvalhu) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
@@ -149,6 +157,9 @@ a_line_DiD_unem <- feols(pct_unem ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_
 g_line_DiD_unem <- feols(pct_unem ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # collect and print results
-a_line_results <- etable(a_line_DiD_dens,a_line_DiD_medvalhu,a_line_DiD_mhi,a_line_DiD_unem,
-                         a_line_DiD_vehicles,a_line_DiD_car,a_line_DiD_transit,a_line_DiD_TT)
-write.csv(a_line_results,"A Line Regression Results.csv")
+a_line_results <- etable(list(a_line_DiD_dens,a_line_DiD_medvalhu,a_line_DiD_mhi,a_line_DiD_unem,
+                         a_line_DiD_vehicles,a_line_DiD_car,a_line_DiD_transit,a_line_DiD_TT),tex = TRUE)
+cat(a_line_results)
+g_line_results <- etable(list(g_line_DiD_dens,g_line_DiD_medvalhu,g_line_DiD_mhi,g_line_DiD_unem,
+                         g_line_DiD_vehicles,g_line_DiD_car,g_line_DiD_transit,g_line_DiD_TT),tex = TRUE)
+cat(g_line_results)

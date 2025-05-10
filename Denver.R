@@ -94,39 +94,31 @@ a_line_DiD <- bind_rows(a_line, control_a_line)
 g_line_DiD <- bind_rows(g_line, control_g_line)
 
 # Travel time DiD
-a_line_DiD_TT <- feols(log(med_travel_time) ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_TT <- feols(log(med_travel_time) ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_TT <- feols(log(med_travel_time) ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_TT <- feols(log(med_travel_time) ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # Density DiD
 a_line_DiD$density <- a_line_DiD$pop / a_line_DiD$ALAND
 g_line_DiD$density <- g_line_DiD$pop / g_line_DiD$ALAND
 
-a_line_DiD_dens <- feols(density ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_dens <- feols(density ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
-
-# avg vehicles DiD
-a_line_DiD <- a_line_DiD %>% 
-  mutate(avg_vehicles = (QZBE004 + QZBE011 + (QZBE005 + QZBE012)*2 + (QZBE006 + QZBE013)*3 + (QZBE007 + QZBE014)*4 + (QZBE008 + QZBE015)*5)/QZBE001)
-g_line_DiD <- g_line_DiD %>% 
-  mutate(avg_vehicles = (QZBE004 + QZBE011 + (QZBE005 + QZBE012)*2 + (QZBE006 + QZBE013)*3 + (QZBE007 + QZBE014)*4 + (QZBE008 + QZBE015)*5)/QZBE001)
-a_line_DiD_vehicles <- feols(avg_vehicles ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_vehicles <- feols(avg_vehicles ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_dens <- feols(density ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_dens <- feols(density ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # drive alone DiD
 a_line_DiD <- a_line_DiD %>%
   mutate(pct_car = QTFE003/QTHE001)
 g_line_DiD <- g_line_DiD %>%
   mutate(pct_car = QTFE003/QTHE001)
-a_line_DiD_car <- feols(pct_car ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_car <- feols(pct_car ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_car <- feols(pct_car ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_car <- feols(pct_car ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # transit DiD
 a_line_DiD <- a_line_DiD %>%
   mutate(pct_transit = QTFE010/QTHE001)
 g_line_DiD <- g_line_DiD %>%
   mutate(pct_transit = QTFE010/QTHE001)
-a_line_DiD_transit <- feols(pct_transit ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_transit <- feols(pct_transit ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_transit <- feols(pct_transit ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_transit <- feols(pct_transit ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # mhi DiD
 a_line_DiD <- a_line_DiD %>%
@@ -135,8 +127,8 @@ a_line_DiD <- a_line_DiD %>%
 g_line_DiD <- g_line_DiD %>%
   mutate = (mhi = as.numeric(mhi)) %>%
   filter(mhi >= 0)
-a_line_DiD_mhi <- feols(log(mhi) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_mhi <- feols(log(mhi) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_mhi <- feols(log(mhi) ~ TREATMENT : ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_mhi <- feols(log(mhi) ~ TREATMENT : ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # medvalhu DiD
 a_line_DiD <- a_line_DiD %>%
@@ -145,21 +137,21 @@ a_line_DiD <- a_line_DiD %>%
 g_line_DiD <- g_line_DiD %>%
   mutate = (medvalhu = as.numeric(mhi)) %>%
   filter(medvalhu >= 0)
-a_line_DiD_medvalhu <- feols(log(medvalhu) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_medvalhu <- feols(log(medvalhu) ~ TREATMENT * ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_medvalhu <- feols(log(medvalhu) ~ TREATMENT : ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_medvalhu <- feols(log(medvalhu) ~ TREATMENT : ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # unemployment DiD
 a_line_DiD <- a_line_DiD %>%
   mutate(pct_unem = QXSE005/QXSE003)
 g_line_DiD <- g_line_DiD %>%
   mutate(pct_unem = QXSE005/QXSE003)
-a_line_DiD_unem <- feols(pct_unem ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
-g_line_DiD_unem <- feols(pct_unem ~ TREATMENT*ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
+a_line_DiD_unem <- feols(pct_unem ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = a_line_DiD)
+g_line_DiD_unem <- feols(pct_unem ~ TREATMENT:ACTIVE | GISJOIN + YEAR, data = g_line_DiD)
 
 # collect and print results
 a_line_results <- etable(list(a_line_DiD_dens,a_line_DiD_medvalhu,a_line_DiD_mhi,a_line_DiD_unem,
-                         a_line_DiD_vehicles,a_line_DiD_car,a_line_DiD_transit,a_line_DiD_TT),tex = TRUE)
+                         a_line_DiD_car,a_line_DiD_transit,a_line_DiD_TT),tex = TRUE)
 cat(a_line_results)
 g_line_results <- etable(list(g_line_DiD_dens,g_line_DiD_medvalhu,g_line_DiD_mhi,g_line_DiD_unem,
-                         g_line_DiD_vehicles,g_line_DiD_car,g_line_DiD_transit,g_line_DiD_TT),tex = TRUE)
+                         g_line_DiD_car,g_line_DiD_transit,g_line_DiD_TT),tex = TRUE)
 cat(g_line_results)
